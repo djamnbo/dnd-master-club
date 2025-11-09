@@ -9,37 +9,46 @@ interface Props {
 }
 
 function GameScreen({ room, players, myPlayerId }: Props) {
-  // 🚨 room prop을 추가로 받아서 activeRoll 상태를 확인합니다.
-  const { chatHistory, isLoading, sendMessage, performRoll } = useGameStore();
+  // 🚨 isAiThinking 가져오기
+  const { chatHistory, isLoading, sendMessage, performRoll, isAiThinking } = useGameStore();
   const [prompt, setPrompt] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const me = players.find(p => p.id === myPlayerId);
-  // 🚨 현재 주사위 요청이 있는지, 그리고 그 대상이 나인지 확인
   const activeRoll = room.activeRoll;
   const isMyRoll = activeRoll?.playerId === myPlayerId;
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatHistory]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 🚨 일반 채팅 전송 (AI 트리거 X)
+  const handleTalk = (e: React.FormEvent) => {
     e.preventDefault();
-    sendMessage(prompt);
+    sendMessage(prompt, false); // isAction = false
+    setPrompt('');
+  };
+
+  // 🚨 행동 선언 전송 (AI 트리거 O)
+  const handleAct = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage(prompt, true); // isAction = true
     setPrompt('');
   };
 
   const handleChoiceClick = (choiceText: string) => {
-    sendMessage(choiceText, true);
+    sendMessage(choiceText, true); // 선택지는 당연히 Action
   };
 
-  // 🚨 주사위 굴리기 핸들러
   const handleRollClick = () => {
-    if (activeRoll && isMyRoll) {
-      performRoll(activeRoll);
-    }
+    if (activeRoll && isMyRoll) performRoll(activeRoll);
   }
 
-  // 임시 배경 이미지 (추후 GM이 변경 가능하게 확장 가능)
-  const currentStageImage = "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop";
+  // const currentStageImage = "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop";
+  // 🚨 핵심: 동적 이미지 URL 생성 (Pollinations AI 활용)
+  // room.currentScene이 있으면 그것을 기반으로 생성, 없으면 기본 이미지 사용
+  console.log('room.currentScene', room.currentScene)
+  const baseImageUrl = room.currentScene
+    ? `https://image.pollinations.ai/prompt/${encodeURIComponent(room.currentScene + ", fantasy digital art, detailed, atmospheric, 8k")}`
+    : "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop";
 
   return (
     <div className="game-layout">
@@ -49,7 +58,6 @@ function GameScreen({ room, players, myPlayerId }: Props) {
           <div className="roll-card">
             <h3>🎲 Fate Awaits...</h3>
             <p className="reason">{activeRoll.reason}</p>
-
             {isMyRoll ? (
               <button className="roll-button" onClick={handleRollClick}>
                 ROLL {activeRoll.diceType.toUpperCase()}
@@ -67,22 +75,28 @@ function GameScreen({ room, players, myPlayerId }: Props) {
 
       <main className="game-main">
         <div className="stage-viewport">
-          <div className="stage-image" style={{ backgroundImage: `url(${currentStageImage})` }} />
+          <div className="stage-image" style={{ backgroundImage: `url(${baseImageUrl})` }} />
+          {/* 🚨 AI 생각 중 표시를 여기에 은은하게 오버레이 */}
+          {isAiThinking && (
+            <div className="ai-thinking-overlay">
+              <span className="blinking">GM is weaving the story...</span>
+            </div>
+          )}
           <div className="stage-overlay">Dungeon Entrance</div>
         </div>
 
         <div className="session-log">
           {chatHistory.map((msg) => (
-            <div key={msg.id} className={`message ${msg.role}`}>
-              <strong>{msg.senderName || 'System'}</strong><pre>{msg.content}</pre>
+            <div key={msg.id} className={`message ${msg.role} ${msg.isAction ? 'action-msg' : ''}`}>
+              <strong>{msg.senderName || 'System'}</strong>
+              <pre>{msg.content}</pre>
             </div>
           ))}
-          {isLoading && <div className="message assistant"><strong>GM</strong><span className="blinking"> is thinking...</span></div>}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* 선택지 영역 (주사위 굴림 중에는 숨김) */}
-        {!activeRoll && me?.choices && me.choices.length > 0 && !isLoading && (
+        {/* 🚨 선택지 영역 (내게 할당된 선택지가 있을 때만 표시) */}
+        {!activeRoll && me?.choices && me.choices.length > 0 && !isAiThinking && (
           <div className="choices-container">
             <p>What will <strong>{me.name}</strong> do?</p>
             <div className="choices-grid">
@@ -95,15 +109,24 @@ function GameScreen({ room, players, myPlayerId }: Props) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="input-form">
+        {/* 🚨 입력 폼 변경: 버튼 2개 */}
+        <form className="input-form-dual">
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder={isLoading ? "Waiting..." : "Action..."}
-            disabled={isLoading || !!activeRoll} // 주사위 중엔 입력 비활성화
-            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(e); }}}
+            placeholder="Chat with party OR Declare custom action..."
+            disabled={!!activeRoll}
           />
-          <button type="submit" disabled={isLoading || !prompt.trim() || !!activeRoll}>Send</button>
+          <div className="button-group">
+            {/* 일반 대화 버튼 */}
+            <button className="talk-btn" onClick={handleTalk} disabled={!prompt.trim()}>
+              💬 Talk
+            </button>
+            {/* 행동 선언 버튼 (AI 트리거) */}
+            <button className="act-btn" onClick={handleAct} disabled={isAiThinking || !!activeRoll || !prompt.trim()}>
+              ⚔️ Act
+            </button>
+          </div>
         </form>
       </main>
 

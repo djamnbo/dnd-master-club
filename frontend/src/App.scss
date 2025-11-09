@@ -9,7 +9,7 @@ $accent-hover: #ffd54f;
 $danger-color: #ff6b6b;
 $success-color: #66bb6a;
 
-$sidebar-width: 260px; // 사이드바 너비를 조금 더 넓게 조정
+$sidebar-width: 240px;
 
 // --- Global Resets ---
 body, html {
@@ -19,7 +19,7 @@ body, html {
   font-family: 'Segoe UI', 'Roboto', sans-serif;
   background-color: $bg-primary;
   color: $text-primary;
-  overflow: hidden;
+  overflow: hidden; // 앱 전체 스크롤 방지
 }
 
 #root {
@@ -99,30 +99,19 @@ input, select, textarea {
   }
 }
 
-// --- Auth & Home Styles ---
+// --- Auth Styles ---
 .google-login-btn {
-  background-color: #ffffff;
-  color: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 24px;
-  font-size: 1.1rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #f1f1f1;
-    transform: translateY(-1px);
-  }
+  background-color: #4285F4;
+  color: white;
+  &:hover:not(:disabled) { background-color: #357ae8; }
 }
 
 .user-profile-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid $bg-tertiary;
 
@@ -131,27 +120,19 @@ input, select, textarea {
     align-items: center;
     gap: 10px;
     font-size: 1.1rem;
-
     .user-avatar-small {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid $accent-color;
+      width: 36px; height: 36px; border-radius: 50%; border: 2px solid $accent-color;
     }
     strong { color: $accent-color; }
   }
 
   .logout-text-btn {
-    background: none;
-    border: none;
-    color: $text-secondary;
-    padding: 5px 10px;
-    font-size: 0.9rem;
-    &:hover { color: $danger-color; background: none; box-shadow: none; transform: none; }
+    background: none; border: none; color: $text-secondary; padding: 5px 10px; font-size: 0.9rem;
+    &:hover { color: $danger-color; background: none; transform: none; box-shadow: none; }
   }
 }
 
-// --- Lobby Styles (Common) ---
+// --- Lobby Styles ---
 .lobby-entrance, .character-creator {
   background-color: $bg-secondary;
   padding: 2rem;
@@ -161,24 +142,39 @@ input, select, textarea {
   max-width: 500px;
   border: 1px solid $bg-tertiary;
 
-  h2, h3 { margin-bottom: 1.5rem; color: $text-primary; }
-  input, select, button { width: 100%; margin-bottom: 1rem; }
-  hr { border: none; border-top: 1px solid $bg-tertiary; margin: 2rem 0; }
+  h2, h3 {
+    margin-bottom: 1.5rem;
+    color: $text-primary;
+  }
+
+  input, select, button {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid $bg-tertiary;
+    margin: 2rem 0;
+  }
 }
 
-// --- Enhanced Lobby Styles ---
 .lobby-mode {
-  justify-content: flex-start;
+  justify-content: flex-start; // 상단부터 채움
   padding-top: 4rem;
   gap: 2rem;
 
   &.newcomer {
-    // 배경 이미지 예시 (어두운 판타지 풍경)
     background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1605806616949-1e87b487fc2f?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
   }
-  .highlight { color: $accent-color; font-family: monospace; }
+
+  .highlight {
+    color: $accent-color;
+    font-family: monospace;
+  }
 }
 
+// Newcomer Layout
 .newcomer-layout {
   display: flex;
   gap: 2rem;
@@ -199,68 +195,146 @@ input, select, textarea {
   box-shadow: 0 0 20px rgba($accent-color, 0.2);
 
   h3 { margin-bottom: 1.5rem; text-align: center; }
+
   .avatar-preview-container {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    .google-avatar-preview {
-      width: 80px; height: 80px; border-radius: 50%; border: 3px solid $accent-color;
-      box-shadow: 0 0 15px rgba($accent-color, 0.3);
-    }
-    .avatar-label { display: block; font-size: 0.8rem; color: $text-secondary; margin-top: 0.5rem; }
+    text-align: center; margin-bottom: 1.5rem;
+    .google-avatar-preview { width: 80px; height: 80px; border-radius: 50%; border: 3px solid $accent-color; display: block; margin: 0 auto 0.5rem; }
+    .avatar-label { color: $text-secondary; font-size: 0.8rem; }
   }
+
   .form-group {
-    margin-bottom: 1.2rem; text-align: left;
-    label { display: block; margin-bottom: 0.5rem; color: $text-secondary; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-    input, select { width: 100%; padding: 12px; font-size: 1.1rem; background-color: rgba(0,0,0,0.3); border: 1px solid $bg-tertiary; &:focus { border-color: $accent-color; } }
+    margin-bottom: 1.2rem;
+    text-align: left;
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: $text-secondary;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      background-color: rgba(0,0,0,0.3);
+      border: 1px solid $bg-tertiary;
+      &:focus { border-color: $accent-color; }
+    }
   }
-  .join-button { width: 100%; padding: 1rem; font-size: 1.3rem; margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+  .join-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
 }
 
 .current-party-preview {
-  flex: 0 0 280px;
+  flex: 0 0 250px;
   background-color: rgba(0,0,0,0.6);
   padding: 1.5rem;
   border-radius: 12px;
   backdrop-filter: blur(5px);
+
   h3 { color: $text-secondary; font-size: 1rem; margin-bottom: 1rem; }
-  .empty-party-msg { color: $text-secondary; font-style: italic; }
+
+  .empty-party-msg {
+    color: $text-secondary;
+    font-style: italic;
+  }
+
   .mini-player {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 10px;
-    background-color: rgba($bg-tertiary, 0.5); border-radius: 8px;
-    img { width: 36px; height: 36px; border-radius: 50%; border: 1px solid $accent-color; }
-    span { font-size: 0.95rem; }
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 8px;
+    background-color: rgba($bg-tertiary, 0.5);
+    border-radius: 8px;
+
+    img { width: 32px; height: 32px; border-radius: 50%; }
+    span { font-size: 0.9rem; }
   }
 }
 
-// --- Member Lobby Layout ---
+// Member Lobby Layout
 .lobby-info {
   margin-bottom: 2rem;
   .room-code-box {
-    background-color: $bg-tertiary; padding: 10px 20px; border-radius: 8px;
-    display: inline-flex; align-items: center; gap: 10px; margin-top: 1rem; border: 1px solid $accent-color;
+    background-color: $bg-tertiary;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1rem;
+    border: 1px solid $accent-color;
+
     strong { font-family: monospace; font-size: 1.5rem; letter-spacing: 2px; color: $accent-color; }
     .copy-btn { padding: 4px 8px; font-size: 0.8rem; background-color: transparent; border: 1px solid $text-secondary; color: $text-secondary; }
   }
 }
 
-.player-list-section { width: 100%; max-width: 900px; }
+.player-list-section {
+  width: 100%;
+  max-width: 800px;
+}
 
 .player-grid.big {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // 더 넓게
+  gap: 1.5rem;
+  margin-top: 2rem;
+
   .player-card {
-    position: relative; background: linear-gradient(145deg, $bg-secondary, darken($bg-secondary, 5%));
-    border: 1px solid $bg-tertiary; padding: 0; overflow: hidden; border-radius: 12px;
-    &.me { border-color: $accent-color; box-shadow: 0 0 15px rgba($accent-color, 0.15); }
-    .card-inner { padding: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    position: relative;
+    background: linear-gradient(145deg, $bg-secondary, darken($bg-secondary, 5%));
+    border: 1px solid $bg-tertiary;
+    padding: 0; // 내부 패딩 제거
+    overflow: hidden;
+    border-radius: 12px;
+
+    &.me {
+      border-color: $accent-color;
+      box-shadow: 0 0 15px rgba($accent-color, 0.15);
+    }
+
+    .card-inner {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
     img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid $bg-tertiary; margin: 0; object-fit: cover; }
+
     .player-info {
       text-align: center;
-      .name { font-size: 1.3rem; display: block; margin-bottom: 0.3rem; }
+      .name { font-size: 1.4rem; display: block; margin-bottom: 0.2rem; }
       .class { color: $accent-color; font-family: serif; font-style: italic; }
-      .my-stats-preview { margin-top: 0.8rem; font-size: 0.8rem; color: $text-secondary; background-color: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px; }
+      .my-stats-preview {
+        margin-top: 0.8rem;
+        font-size: 0.8rem;
+        color: $text-secondary;
+        background-color: rgba(0,0,0,0.3);
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
     }
+
     .status-badge {
-      width: 100%; text-align: center; padding: 0.6rem; font-weight: bold; letter-spacing: 1px; font-size: 0.9rem;
+      width: 100%;
+      text-align: center;
+      padding: 0.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+
       &.waiting { background-color: $bg-tertiary; color: $text-secondary; }
       &.ready { background-color: $success-color; color: $bg-primary; }
     }
@@ -268,19 +342,35 @@ input, select, textarea {
 }
 
 .lobby-actions.fixed-bottom {
-  position: fixed; bottom: 0; left: 0; width: 100%;
-  background-color: rgba($bg-primary, 0.9); backdrop-filter: blur(10px);
-  padding: 1.5rem; border-top: 1px solid $bg-tertiary;
-  display: flex; justify-content: center; gap: 2rem; z-index: 10;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba($bg-primary, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  border-top: 1px solid $bg-tertiary;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  z-index: 10;
+
   button {
-    min-width: 220px; height: 60px; font-size: 1.3rem; border-radius: 30px;
+    min-width: 200px;
+    height: 60px;
+    font-size: 1.3rem;
+    border-radius: 30px; // 둥근 버튼
+
     &.ready-toggle {
-      &.confirm { background-color: $accent-color; color: black; }
+      &.confirm { background-color: $accent-color; color: $bg-primary; }
       &.cancel { background-color: transparent; border: 2px solid $danger-color; color: $danger-color; }
     }
     &.start-game-btn {
       background: linear-gradient(to right, $success-color, lighten($success-color, 10%));
-      box-shadow: 0 0 20px rgba($success-color, 0.4); animation: pulse 2s infinite;
+      box-shadow: 0 0 20px rgba($success-color, 0.4);
+      animation: pulse 2s infinite;
+      color: white;
+
       &:disabled { animation: none; background: $bg-tertiary; color: $text-secondary; box-shadow: none; }
     }
   }
@@ -288,122 +378,330 @@ input, select, textarea {
 
 // --- Game Layout Styles ---
 .game-layout {
-  display: flex; height: 100vh; width: 100vw; background-color: $bg-primary;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: $bg-primary;
 }
+
 .player-sidebar {
-  width: $sidebar-width; min-width: $sidebar-width; background-color: $bg-secondary;
-  padding: 1rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto;
+  width: $sidebar-width;
+  min-width: $sidebar-width;
+  background-color: $bg-secondary;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
   border-right: 1px solid $bg-tertiary;
-  &.right { border-right: none; border-left: 1px solid $bg-tertiary; }
+
+  &.right {
+    border-right: none;
+    border-left: 1px solid $bg-tertiary;
+  }
 }
+
 .game-main {
-  flex: 1; display: flex; flex-direction: column; height: 100%; position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
 }
 
-// --- Stage Viewport ---
 .stage-viewport {
-  width: 100%; height: 35%; min-height: 250px; background-color: black; position: relative; overflow: hidden;
-  border-bottom: 3px solid $accent-color; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-  .stage-image { width: 100%; height: 100%; background-position: center; background-size: cover; background-repeat: no-repeat; transition: background-image 0.5s ease-in-out; filter: brightness(0.7); }
-  .stage-overlay { position: absolute; bottom: 15px; left: 20px; color: rgba(255,255,255,0.9); font-size: 1.2rem; font-family: serif; font-style: italic; text-shadow: 0 2px 4px rgba(0,0,0,0.9); background-color: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 4px; border-left: 3px solid $accent-color; }
+  width: 100%;
+  height: 35%; // 전체 게임 화면의 35% 차지
+  min-height: 250px;
+  background-color: black;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 3px solid $accent-color;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+
+  .stage-image {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: background-image 0.5s ease-in-out;
+    filter: brightness(0.7);
+  }
+
+  .stage-overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    font-style: italic;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  }
+
+  .ai-thinking-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
+    display: flex; align-items: center; justify-content: center;
+    color: $accent-color; font-size: 1.5rem; font-family: serif; font-style: italic;
+    z-index: 10;
+  }
 }
 
-// --- Chat & Session Log ---
 .session-log {
-  flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   background: linear-gradient(to bottom, rgba($bg-primary, 0.9), $bg-primary);
+
   &::-webkit-scrollbar { width: 8px; }
   &::-webkit-scrollbar-thumb { background-color: $bg-tertiary; border-radius: 4px; }
+
   .message {
-    max-width: 85%; padding: 1rem; border-radius: 12px; line-height: 1.6; position: relative; animation: fadeIn 0.3s ease;
-    strong { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; opacity: 0.8; }
-    pre { white-space: pre-wrap; margin: 0; font-family: 'Segoe UI', sans-serif; font-size: 1.05rem; }
-    &.user { align-self: flex-end; background-color: #2c3e50; color: #ecf0f1; border-bottom-right-radius: 2px; strong { color: #3498db; } }
-    &.assistant { align-self: flex-start; background-color: $bg-tertiary; color: $text-primary; border-bottom-left-radius: 2px; border-left: 3px solid $accent-color; strong { color: $accent-color; } }
-    &.system { align-self: center; background-color: transparent; color: $text-secondary; font-style: italic; text-align: center; font-size: 0.9rem; max-width: 100%; strong { display: none; } }
+    max-width: 80%;
+    padding: 1rem;
+    border-radius: 12px;
+    line-height: 1.5;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+
+    strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      margin: 0;
+      font-family: inherit;
+    }
+
+    &.user {
+      align-self: flex-end;
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      border-bottom-right-radius: 2px;
+      strong { color: #3498db; }
+    }
+
+    &.assistant {
+      align-self: flex-start;
+      background-color: $bg-tertiary;
+      color: $text-primary;
+      border-bottom-left-radius: 2px;
+      border-left: 3px solid $accent-color;
+      strong { color: $accent-color; }
+    }
+
+    &.system {
+      align-self: center;
+      background-color: transparent;
+      color: $text-secondary;
+      font-style: italic;
+      text-align: center;
+      font-size: 0.9rem;
+      max-width: 100%;
+      strong { display: none; }
+    }
+
+    &.action-msg {
+      border: 1px solid $accent-color;
+      background-color: rgba($accent-color, 0.1);
+      strong { color: $accent-color; }
+    }
   }
 }
 
-// --- Input Form ---
-.input-form {
-  padding: 1rem; background-color: $bg-secondary; border-top: 1px solid $bg-tertiary; display: flex; gap: 1rem;
-  textarea { flex: 1; resize: none; height: 60px; border: 1px solid $bg-tertiary; font-family: sans-serif; &:focus { border-color: $accent-color; box-shadow: 0 0 0 2px rgba($accent-color, 0.2); } }
-  button { height: 60px; padding: 0 2rem; font-size: 1.1rem; }
+.input-form-dual {
+  padding: 1rem;
+  background-color: $bg-secondary;
+  border-top: 1px solid $bg-tertiary;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+
+  textarea {
+    flex: 1;
+    resize: none;
+    height: 60px;
+    border: 1px solid $bg-tertiary;
+    &:focus {
+      border-color: $accent-color;
+      box-shadow: 0 0 0 2px rgba($accent-color, 0.2);
+    }
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    @media (min-width: 768px) { flex-direction: row; }
+
+    button {
+      height: auto;
+      min-height: 60px;
+      padding: 0 1.5rem;
+      font-size: 1rem;
+
+      &.talk-btn {
+        background-color: $bg-tertiary;
+        color: $text-primary;
+        border: 1px solid $text-secondary;
+        &:hover:not(:disabled) { background-color: lighten($bg-tertiary, 10%); }
+      }
+      &.act-btn {
+        background-color: $accent-color;
+        color: $bg-primary;
+        &:hover:not(:disabled) { background-color: $accent-hover; }
+      }
+    }
+  }
 }
 
-// --- Choice UI Styles ---
+// --- Choices UI ---
 .choices-container {
-  background-color: rgba($bg-secondary, 0.95); padding: 1.2rem; border-top: 3px solid $accent-color; animation: slideUp 0.3s ease;
-  p { margin: 0 0 1rem 0; color: $text-primary; font-size: 1.1rem; text-align: center; strong { color: $accent-color; } }
+  background-color: rgba($bg-secondary, 0.9);
+  padding: 1rem;
+  border-top: 2px solid $accent-color;
+  animation: slideUp 0.3s ease;
+
+  p {
+    margin: 0 0 0.8rem 0;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    strong { color: $accent-color; }
+  }
+
   .choices-grid {
-    display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+
     .choice-btn {
-      flex: 1 1 45%; min-width: 250px; max-width: 500px; background: linear-gradient(to bottom, $bg-tertiary, darken($bg-tertiary, 3%));
-      border: 1px solid $accent-color; color: $text-primary; padding: 15px 20px; font-size: 1.05rem; text-align: left; white-space: normal;
-      border-radius: 8px; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden;
-      &:hover { background: $accent-color; color: $bg-primary; transform: translateY(-3px); box-shadow: 0 5px 15px rgba($accent-color, 0.3); }
-      &:active { transform: translateY(-1px); }
+      flex: 1;
+      min-width: 200px;
+      background-color: transparent;
+      border: 1px solid $accent-color;
+      color: $accent-color;
+      padding: 12px;
+      font-size: 1rem;
+      text-align: left;
+      white-space: normal;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: $accent-color;
+        color: $bg-primary;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba($accent-color, 0.3);
+      }
     }
   }
 }
 
-// --- Roll Overlay Styles ---
+// --- Roll Overlay ---
 .roll-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 100;
-  display: flex; align-items: center; justify-content: center; animation: fadeIn 0.5s ease;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+
   .roll-card {
-    background: linear-gradient(145deg, $bg-secondary, #000); padding: 3rem; border-radius: 20px; border: 2px solid $accent-color;
-    text-align: center; box-shadow: 0 0 60px rgba($accent-color, 0.4); max-width: 90%; width: 450px;
-    h3 { font-size: 2.2rem; margin-bottom: 1rem; color: $accent-color; text-transform: uppercase; letter-spacing: 2px; }
-    .reason { font-size: 1.4rem; color: $text-primary; margin-bottom: 3rem; font-style: italic; font-family: serif; }
+    background: linear-gradient(145deg, $bg-secondary, darken($bg-secondary, 5%));
+    padding: 3rem;
+    border-radius: 16px;
+    border: 3px solid $accent-color;
+    text-align: center;
+    box-shadow: 0 0 50px rgba($accent-color, 0.3);
+    max-width: 90%;
+    width: 400px;
+
+    h3 { font-size: 2rem; margin-bottom: 1rem; color: $accent-color; }
+    .reason { font-size: 1.2rem; color: $text-primary; margin-bottom: 2.5rem; font-style: italic; }
+
     .roll-button {
-      width: 100%; padding: 1.5rem; font-size: 1.8rem; background: linear-gradient(to right, $accent-color, lighten($accent-color, 10%));
-      color: $bg-primary; text-transform: uppercase; letter-spacing: 3px; border-radius: 50px; animation: pulse 1.5s infinite;
-      border: none; box-shadow: 0 0 30px rgba($accent-color, 0.5);
-      &:hover { transform: scale(1.05); } &:active { transform: scale(0.98); }
+      width: 100%;
+      padding: 1.5rem;
+      font-size: 1.5rem;
+      background: linear-gradient(to right, $accent-color, $accent-hover);
+      color: $bg-primary;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 50px;
+      animation: pulse 1.5s infinite;
+
+      &:hover { transform: scale(1.05); }
+      &:active { transform: scale(0.95); }
     }
-    .waiting-message { font-size: 1.4rem; color: $text-secondary; strong { color: $accent-color; font-size: 1.5rem; } }
+
+    .waiting-message {
+      font-size: 1.3rem;
+      color: $text-secondary;
+      strong { color: $accent-color; }
+    }
   }
 }
 
-// --- Player Status Widget (Character Sheet style) ---
+// --- Player Status Widget (Character Sheet Style) ---
 .player-status-widget.character-sheet {
-  background-color: $bg-tertiary; border-radius: 12px; padding: 1rem; border: 1px solid #444;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s;
-  &:hover { border-color: $accent-color; }
+  background-color: $bg-tertiary;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #444;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 
   .sheet-header {
-    display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #555;
-    .character-portrait { width: 60px; height: 60px; border-radius: 50%; border: 2px solid $accent-color; object-fit: cover; }
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #555;
+
+    .character-portrait {
+      width: 60px; height: 60px; border-radius: 50%; border: 2px solid $accent-color; object-fit: cover;
+    }
     .character-info {
-      .character-name { font-weight: bold; color: $accent-color; font-size: 1.2rem; }
-      .character-class { font-size: 0.9rem; color: $text-secondary; font-style: italic; }
+      .character-name { font-weight: bold; color: $accent-color; font-size: 1.1rem; }
+      .character-class { font-size: 0.85rem; color: $text-secondary; font-style: italic; }
     }
   }
+
   .combat-stats {
-    display: flex; justify-content: space-around; margin-bottom: 1rem; background-color: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px;
+    display: flex; gap: 0.5rem; margin-bottom: 1rem;
     .stat-box {
-      text-align: center;
-      .label { display: block; font-size: 0.8rem; color: $text-secondary; margin-bottom: 2px; }
+      flex: 1; background-color: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; text-align: center; border: 1px solid #444;
+      .label { display: block; font-size: 0.7rem; color: $text-secondary; letter-spacing: 1px; }
       .value { font-size: 1.2rem; font-weight: bold; color: $text-primary; }
     }
   }
+
   .ability-scores {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;
     .score-item {
-      display: flex; justify-content: space-between; align-items: center; background-color: rgba($bg-primary, 0.5);
-      padding: 6px 10px; border-radius: 6px; border: 1px solid transparent;
-      &:hover { border-color: rgba($accent-color, 0.3); }
-      .label { font-size: 0.85rem; color: $text-secondary; font-weight: bold; }
-      .value { font-size: 1rem; color: $text-primary; }
+      background-color: rgba(0,0,0,0.2); padding: 4px; border-radius: 4px; text-align: center;
+      .label { display: block; font-size: 0.65rem; color: $text-secondary; }
+      .value { font-size: 1rem; font-weight: bold; }
     }
   }
 }
 
-// --- Animations ---
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba($accent-color, 0.7); } 70% { box-shadow: 0 0 0 20px rgba($accent-color, 0); } 100% { box-shadow: 0 0 0 0 rgba($accent-color, 0); } }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba($accent-color, 0.4); } 70% { box-shadow: 0 0 0 20px rgba($accent-color, 0); } 100% { box-shadow: 0 0 0 0 rgba($accent-color, 0); } }
 .blinking { animation: blink 1.5s infinite; }
 @keyframes blink { 50% { opacity: 0.3; } }

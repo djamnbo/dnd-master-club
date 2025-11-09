@@ -7,45 +7,53 @@ import GameScreen from '../components/GameScreen';
 function Room() {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
-  const { joinRoom, cleanup, room, players, playerId, isLoading, user, isAuthLoading } = useGameStore();
 
+  // 글로벌 상태 가져오기
+  const {
+    joinRoom,
+    cleanup,
+    room,
+    players,
+    playerId,
+    isAuthLoading
+  } = useGameStore();
+
+  // 1. 방 접속 시도 (roomId가 변경될 때마다)
   useEffect(() => {
-    if (isAuthLoading) return;
-
-    if (!user) {
-      alert("Please sign in to join the room.");
-      navigate('/');
-      return;
-    }
-
-    if (roomId) {
-      joinRoom(roomId).catch((error) => {
-        console.error(error);
-        alert("Failed to join room. Check the ID.");
-        navigate('/');
+    if (roomId && !isAuthLoading) {
+      joinRoom(roomId).catch((err) => {
+        console.error("Join Room Error:", err);
+        alert("Failed to join room. It might not exist or you don't have permission.");
+        navigate('/'); // 실패 시 홈으로 이동
       });
     }
 
-    return () => { cleanup(); };
-  }, [roomId, user, isAuthLoading, navigate]); // joinRoom, cleanup은 제외 (무한 루프 방지)
+    // 언마운트 시 리스너 정리
+    return () => {
+      cleanup();
+    };
+  }, [roomId, isAuthLoading]); // 인증 로딩이 끝난 후 실행되도록 의존성 추가
 
-  if (isAuthLoading || isLoading || !room) {
+  // 2. 로딩 상태 처리
+  if (isAuthLoading || !room) {
     return (
       <div className="App-header">
+        {/* 인증 확인 중이거나 방 정보를 불러오는 중 */}
         <h2>{isAuthLoading ? 'Checking Guild Pass...' : 'Traveling to Realm...'}</h2>
       </div>
     );
   }
 
-  // 🚨 핵심 수정: 내 캐릭터가 플레이어 목록에 있는지 확인
+  // 3. 내 캐릭터가 이 방에 존재하는지 확인
   const amIMember = players.some(p => p.id === playerId);
 
-  // 1. 내가 아직 멤버가 아니라면, 방 상태와 상관없이 무조건 로비(캐릭터 생성 화면)를 보여준다.
+  // 4. 라우팅 로직
+  // 내가 아직 멤버가 아니라면, 방 상태가 무엇이든 무조건 로비(캐릭터 생성 화면)를 보여준다.
   if (!amIMember) {
     return <LobbyScreen room={room} players={players} myPlayerId={playerId} />;
   }
 
-  // 2. 멤버라면, 방 상태에 따라 적절한 화면을 보여준다.
+  // 내가 멤버라면, 방의 상태에 따라 화면을 전환한다.
   if (room.gameStatus === 'lobby') {
     return <LobbyScreen room={room} players={players} myPlayerId={playerId} />;
   }
